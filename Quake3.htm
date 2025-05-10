@@ -9,6 +9,7 @@
 </head>
 
 <body>
+	<div id="loading-text" style="color: black; font-family: cursive; font-size: 48px; text-align: center; margin-top: 20px;">LOADING...</div>
     <div id="viewport-frame"></div>
     <script src="alertCustom.js"></script>
     <script>
@@ -61,10 +62,7 @@
                 mergeFiles(getParts("Quake3.js", 1, 3))
             ]).then(([quake3jsmerged]) => {
                 try {
-                    // HIDING THE GUI
-                    document.getElementsByClassName("gui_container")[0].style.display = "none";
-                    // SHOWING THE LOADING SPINNER
-                    document.getElementsByClassName("gui_loading")[0].style.display = "block";
+					document.querySelector("#loading-text").remove();
                     // LOADING AND RUNNING QUAKE 3
                     var quakeLoader = document.createElement("script");
                     quakeLoader.onload = function () {
@@ -77,7 +75,6 @@
                             location.reload();
                         }
                         ioq3.callMain();
-                        document.getElementsByClassName("gui_loading")[0].style.display = "none";
                     }
                     quakeLoader.src = quake3jsmerged;
                     document.body.appendChild(quakeLoader);
@@ -103,8 +100,6 @@
         function goBackButtonResetIncrement() {
             try {
                 CTRLS_IDLE = 0;
-                // SHOWS THE DOWNLOAD BUTTON
-                document.getElementsByClassName("gui_download")[0].style.display = "block";
             } catch (err) {}
         }
 
@@ -113,7 +108,6 @@
                 CTRLS_IDLE = CTRLS_IDLE + 1;
                 if (CTRLS_IDLE >= 3) {
                     // HIDES THE DOWNLOAD BUTTON
-                    document.getElementsByClassName("gui_download")[0].style.display = "none";
                 }
             } catch (err) {}
         }
@@ -174,7 +168,6 @@
                         // SETTING THE FILE CONTENT
                         profileData = this.result;
                         // CLEARING THE SELECTED FILE VALUE
-                        document.getElementById("gui_controls_file").value = null;
                         // STARTING QUAKE III ARENA
                         runQuake3();
                     };
@@ -182,7 +175,6 @@
                     filereader.readAsText(files[0]);
                 } else {
                     // CLEARING THE SELECTED FILE VALUE
-                    document.getElementById("gui_controls_file").value = null;
                     // SHOWING A MESSAGE SAYING THAT YOU CAN ONLY SELECT THE QUAKE 3 PROFILE/SAVEGAME FILE
                     alertCustom(STRING_ERROR_TITLE, STRING_ERROR_MESSAGE, STRING_ERROR_OK, function () {});
                 }
@@ -192,17 +184,7 @@
             // CHECKING IF THE GAME IS NOT RUNNING WITHIN AN IFRAME
             if (window.top == window.self) {
                 // CLEARING THE SELECTED FILE VALUE
-                document.getElementById("gui_controls_file").value = null;
-                // SETTING WHAT WILL HAPPEN WHEN THE USER CLICKS ON THE START AND UPLOAD ICONS
-                document.getElementsByClassName("gui_start")[0].addEventListener("click", function (event) {
-                    runQuake3()
-                });
-                document.getElementsByClassName("gui_upload")[0].addEventListener("click", function (event) {
-                    document.getElementById("gui_controls_file").click()
-                });
-                document.getElementsByClassName("gui_download")[0].addEventListener("click", function (event) {
-                    downloadProfileData()
-                });
+                runQuake3()
                 // HANDLING THE MOUSE BEHAVIOR
                 setInterval(goBackButtonTimerIncrement, 1000);
                 document.addEventListener("click", mouseChecker, false);
